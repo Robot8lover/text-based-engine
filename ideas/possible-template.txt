@@ -1,0 +1,8 @@
+Room name
+# id
+Some text goes here and now you can go to [desired text](room name if unique) or [desired text](#room-id).
+
+---
+
+Next room name
+
