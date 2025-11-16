@@ -1,0 +1,2 @@
+- array or dict to store each room:
+    - \[prompt text, \[\[choice text, choice number/reference\],...\]\]
