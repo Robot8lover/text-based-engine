@@ -15,6 +15,7 @@ def parseFile(file):
     return rooms
 
 def parseText(file):
+    """
     Splits a string into room text arrays.
     """
     rooms = []
