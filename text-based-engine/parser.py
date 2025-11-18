@@ -32,22 +32,17 @@ def parse_text(file):
         rooms.append(current_room)
     return rooms
 
+def parse_choices(choices_list):
+    pass
+
 def parse_room_body_list(room_body_list):
     body = {}
-    in_choices = False
     pattern = r"\d+\.\s+"
     for i, line in enumerate(room_body_list):
-        split = re.split(pattern, line)
-        if in_choices:
-            if len(split) == 1:
-                # Reached extra line after choices
-                # For now, we assume that this line must be unimportant (empty)
-                break
-            body["choices"].append(split[1])
-        elif len(split) > 1:
+        if re.match(pattern, line):
             body["text"] = "\n".join(room_body_list[:i])
-            body["choices"] = [split[1]]
-            in_choices = True
+            body["choices"] = parse_choices(room_body_list[i:])
+            break
     return body
 
 def parse_room_lists(room_lists):
