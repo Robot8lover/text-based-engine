@@ -12,7 +12,7 @@ def parse_file(file):
             current_room = []
         else:
             current_room.append(line)
-    if not all("" = line or line.isspace() for line in current_room):
+    if not all("" == line or line.isspace() for line in current_room):
         rooms.append(current_room)
     return rooms
 
@@ -28,7 +28,7 @@ def parse_text(file):
             current_room = []
         else:
             current_room.append(line)
-    if not all("" = line or line.isspace() for line in current_room):
+    if not all("" == line or line.isspace() for line in current_room):
         rooms.append(current_room)
     return rooms
 
@@ -40,7 +40,8 @@ def parse_room_body_list(room_body_list):
         split = re.split(pattern, line)
         if in_choices:
             if len(split) == 1:
-                # Reached extra space after choices
+                # Reached extra line after choices
+                # For now, we assume that this line must be unimportant (empty)
                 break
             body["choices"].append(split[1])
         elif len(split) > 1:
@@ -64,8 +65,8 @@ def parse_room_lists(room_lists):
             raise ValueError(f"Room id {room_id} is not unique")
         else:
             rooms[room_id] = {
-                    "title": title,
-                    "body": room_body,
+                "title": title,
+                "body": room_body,
             }
     return rooms
 
