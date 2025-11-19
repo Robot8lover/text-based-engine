@@ -1,7 +1,7 @@
 import re
 import typing
 
-def parse_file(file: typing.TextIO) -> list:
+def parse_file(file: typing.TextIO) -> tuple[dict, list]:
     """
     Splits a file into room text arrays.
     """
@@ -21,7 +21,15 @@ def parse_file(file: typing.TextIO) -> list:
                 has_content = True
     if has_content:
         rooms.append(current_room)
-    return rooms
+    return parse_header(rooms[0]), rooms[1:]
+
+def parse_header(header: list[str]) -> dict[str, str]:
+    header_dict = {}
+    for line in header:
+        split = line.split(":", 1) # consider using regex
+        if len(split) > 1:
+            header_dict[split[0]] = split[1]
+    return header_dict
 
 def parse_choice(choice: str) -> dict[str, str|None]:
     # Test if it is [text](#id) or (#id)
