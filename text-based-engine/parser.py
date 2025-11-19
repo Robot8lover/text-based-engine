@@ -32,8 +32,32 @@ def parse_text(file):
         rooms.append(current_room)
     return rooms
 
-def parse_choices(choices_list):
-    pass
+def parse_choice(choice):
+    # Test if it is [text](#id) or (#id)
+    # If the latter, text is the title of the room
+    # Except that requires later knowledge hmmm.
+    # So maybe we should make a later pass
+    text_pattern = r"\[([\w ()[\]-]*)\](\(#([\w-]*)\))"
+    id_pattern = r"(\(#([\w-]*)\))"
+    choice = choice.strip()
+    id_match = re.match(id_pattern, choice)
+    if id_match:
+        return None, id_match.group(1)
+    else:
+        return re.match(text_pattern, choice).group(1, 2) # or .groups()
+
+def parse_choices_list(choices_list):
+    choices = []
+    pattern = r"\d+\.\s+"
+    for line in choices_list:
+        split = re.split(pattern, line)
+        if len(split) == 1:
+            # Reached extra line after choices
+            # For now, we assume that this line must be unimportant (empty)
+            break
+        # We do not check for proper numbering
+        choices.append(parse_choice(split[1]))
+    return choices
 
 def parse_room_body_list(room_body_list):
     body = {}
@@ -41,7 +65,7 @@ def parse_room_body_list(room_body_list):
     for i, line in enumerate(room_body_list):
         if re.match(pattern, line):
             body["text"] = "\n".join(room_body_list[:i])
-            body["choices"] = parse_choices(room_body_list[i:])
+            body["choices"] = parse_choices_list(room_body_list[i:])
             break
     return body
 
