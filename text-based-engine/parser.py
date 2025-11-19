@@ -1,6 +1,7 @@
 import re
+import typing
 
-def parse_file(file) -> list:
+def parse_file(file: typing.TextIO) -> list:
     """
     Splits a file into room text arrays.
     """
@@ -16,7 +17,7 @@ def parse_file(file) -> list:
         rooms.append(current_room)
     return rooms
 
-def parse_text(text) -> list:
+def parse_text(text: str) -> list:
     """
     Splits a string into room text arrays.
     """
@@ -32,7 +33,7 @@ def parse_text(text) -> list:
         rooms.append(current_room)
     return rooms
 
-def parse_choice(choice: str) -> dict:
+def parse_choice(choice: str) -> dict[str, str|None]:
     # Test if it is [text](#id) or (#id)
     # If the latter, text is the title of the room
     # Except that requires later knowledge hmmm.
@@ -41,7 +42,7 @@ def parse_choice(choice: str) -> dict:
     id_pattern = r"(\(#([\w-]*)\))"
     choice = choice.strip()
     id_match = re.match(id_pattern, choice)
-    choice_dict = {
+    choice_dict: dict[str, str | None] = {
         "text": None,
         "id": None,
     }
@@ -56,7 +57,7 @@ def parse_choice(choice: str) -> dict:
             raise ValueError(f"Choice `{choice}` did not match expected patterns.")
     return choice_dict
 
-def parse_choices_list(choices_list):
+def parse_choices_list(choices_list: list[str]) -> list[dict[str, str|None]]:
     choices = []
     pattern = r"\d+\.\s+"
     for line in choices_list:
@@ -69,7 +70,7 @@ def parse_choices_list(choices_list):
         choices.append(parse_choice(split[1]))
     return choices
 
-def parse_room_body_list(room_body_list):
+def parse_room_body_list(room_body_list: list[str]) -> dict[str, list]:
     body = {}
     pattern = r"\d+\.\s+"
     for i, line in enumerate(room_body_list):
@@ -79,7 +80,7 @@ def parse_room_body_list(room_body_list):
             break
     return body
 
-def parse_room_lists(room_lists):
+def parse_room_lists(room_lists: list[list[str]]) -> dict[str, dict]:
     rooms = {}
     for current_room in room_lists:
         title = current_room[0].strip()
@@ -99,11 +100,11 @@ def parse_room_lists(room_lists):
             }
     return rooms
 
-def fill_titles(room_list):
+def fill_titles(room_list: dict[str, dict]):
     """
     Modifies the names of rooms in the choices.
     """
-    for room in room_list:
+    for room in room_list.values():
         for i, choice in enumerate(room["body"]["choices"]):
             if choice["text"] is None:
                 choice["text"] = room_list[choice["id"]]["title"]
