@@ -1,6 +1,6 @@
 import re
 
-def parse_file(file):
+def parse_file(file) -> list:
     """
     Splits a file into room text arrays.
     """
@@ -16,7 +16,7 @@ def parse_file(file):
         rooms.append(current_room)
     return rooms
 
-def parse_text(file):
+def parse_text(file) -> list:
     """
     Splits a string into room text arrays.
     """
@@ -32,7 +32,7 @@ def parse_text(file):
         rooms.append(current_room)
     return rooms
 
-def parse_choice(choice):
+def parse_choice(choice: str) -> dict:
     # Test if it is [text](#id) or (#id)
     # If the latter, text is the title of the room
     # Except that requires later knowledge hmmm.
@@ -41,14 +41,20 @@ def parse_choice(choice):
     id_pattern = r"(\(#([\w-]*)\))"
     choice = choice.strip()
     id_match = re.match(id_pattern, choice)
+    choice_dict = {
+        "text": None,
+        "id": None,
+    }
     if id_match:
-        return None, id_match.group(1)
+        choice_dict["id"] = id_match.group(1)
     else:
         text_match = re.match(text_pattern, choice)
         if text_match:
-            return text_match.group(1, 2) # or .groups()
+            choice_dict["text"], choice_dict["id"] = text_match.group(1, 2)
+            # or .groups()
         else:
             raise ValueError(f"Choice `{choice}` did not match expected patterns.")
+    return choice_dict
 
 def parse_choices_list(choices_list):
     choices = []
@@ -93,3 +99,11 @@ def parse_room_lists(room_lists):
             }
     return rooms
 
+def fill_titles(room_list):
+    """
+    Modifies the names of rooms in the choices.
+    """
+    for room in room_list:
+        for i, choice in enumerate(room["body"]["choices"]):
+            if choice["text"] is None:
+                choice["text"] = room_list[choice["id"]]["title"]
