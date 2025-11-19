@@ -1,37 +1,35 @@
 import re
 import typing
 
-def parse_file(file: typing.TextIO) -> list:
+def parse_file(file: typing.TextIO) -> tuple[dict, list]:
     """
     Splits a file into room text arrays.
     """
     rooms = []
     current_room = []
+    has_content = False
     for line in file:
-        if line == "---":
-            rooms.append(current_room)
+        stripped_line = line.strip()
+        if stripped_line == "---":
+            if has_content:
+                rooms.append(current_room)
             current_room = []
+            has_content = False
         else:
             current_room.append(line)
-    if not all("" == line or line.isspace() for line in current_room):
+            if not has_content and stripped_line:
+                has_content = True
+    if has_content:
         rooms.append(current_room)
-    return rooms
+    return parse_header(rooms[0]), rooms[1:]
 
-def parse_text(text: str) -> list:
-    """
-    Splits a string into room text arrays.
-    """
-    rooms = []
-    current_room = []
-    for line in text.split("\n"):
-        if line == "---":
-            rooms.append(current_room)
-            current_room = []
-        else:
-            current_room.append(line)
-    if not all("" == line or line.isspace() for line in current_room):
-        rooms.append(current_room)
-    return rooms
+def parse_header(header: list[str]) -> dict[str, str]:
+    header_dict = {}
+    for line in header:
+        split = line.split(":", 1) # consider using regex
+        if len(split) > 1:
+            header_dict[split[0]] = split[1]
+    return header_dict
 
 def parse_choice(choice: str) -> dict[str, str|None]:
     # Test if it is [text](#id) or (#id)
