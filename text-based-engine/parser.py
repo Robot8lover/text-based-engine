@@ -17,22 +17,6 @@ def parse_file(file: typing.TextIO) -> list:
         rooms.append(current_room)
     return rooms
 
-def parse_text(text: str) -> list:
-    """
-    Splits a string into room text arrays.
-    """
-    rooms = []
-    current_room = []
-    for line in text.split("\n"):
-        if line == "---":
-            rooms.append(current_room)
-            current_room = []
-        else:
-            current_room.append(line)
-    if not all("" == line or line.isspace() for line in current_room):
-        rooms.append(current_room)
-    return rooms
-
 def parse_choice(choice: str) -> dict[str, str|None]:
     # Test if it is [text](#id) or (#id)
     # If the latter, text is the title of the room
