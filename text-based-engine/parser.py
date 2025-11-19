@@ -44,7 +44,11 @@ def parse_choice(choice):
     if id_match:
         return None, id_match.group(1)
     else:
-        return re.match(text_pattern, choice).group(1, 2) # or .groups()
+        text_match = re.match(text_pattern, choice)
+        if text_match:
+            return text_match.group(1, 2) # or .groups()
+        else:
+            raise ValueError(f"Choice `{choice}` did not match expected patterns.")
 
 def parse_choices_list(choices_list):
     choices = []
