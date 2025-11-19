@@ -16,13 +16,13 @@ def parse_file(file) -> list:
         rooms.append(current_room)
     return rooms
 
-def parse_text(file) -> list:
+def parse_text(text) -> list:
     """
     Splits a string into room text arrays.
     """
     rooms = []
     current_room = []
-    for line in file.split("\n"):
+    for line in text.split("\n"):
         if line == "---":
             rooms.append(current_room)
             current_room = []
