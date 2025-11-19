@@ -7,13 +7,19 @@ def parse_file(file: typing.TextIO) -> list:
     """
     rooms = []
     current_room = []
+    has_content = False
     for line in file:
-        if line == "---":
-            rooms.append(current_room)
+        stripped_line = line.strip()
+        if stripped_line == "---":
+            if has_content:
+                rooms.append(current_room)
             current_room = []
+            has_content = False
         else:
             current_room.append(line)
-    if not all("" == line or line.isspace() for line in current_room):
+            if not has_content and stripped_line:
+                has_content = True
+    if has_content:
         rooms.append(current_room)
     return rooms
 
