@@ -1,7 +1,6 @@
 start: id
 
 ---
-
 Room name
 # id
 Some text goes here and now you can go to the following rooms. The one without a desired text will have the text of the room name. Room ids should be unique.
@@ -12,6 +11,5 @@ We might want paragraph breaks and add more text here.
 2. (#room-id)
 
 ---
-
 Next room name
 
