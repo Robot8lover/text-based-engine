@@ -68,15 +68,13 @@ def parse_choices_list(choices_list: list[str]) -> list[dict[str, str|None]]:
         choices.append(parse_choice(split[1]))
     return choices
 
-def parse_room_body_list(room_body_list: list[str]) -> dict[str, list]:
-    body = {}
+def parse_room_body_list(room_body_list: list[str]) \
+        -> tuple[str, list[dict[str, str | None]]]:
     pattern = r"\d+\.\s+"
     for i, line in enumerate(room_body_list):
         if re.match(pattern, line):
-            body["text"] = "\n".join(room_body_list[:i])
-            body["choices"] = parse_choices_list(room_body_list[i:])
-            break
-    return body
+            return "\n".join(room_body_list[:i]), parse_choices_list(room_body_list[i:])
+    return "\n".join(room_body_list), parse_choices_list([])
 
 def parse_room_lists(room_lists: list[list[str]]) -> dict[str, dict]:
     rooms = {}
@@ -88,13 +86,14 @@ def parse_room_lists(room_lists: list[list[str]]) -> dict[str, dict]:
             # depending on our choices
             # and then maybe we should assign it?
             room_id = room_id[1:].strip() # or just lstrip
-        room_body = parse_room_body_list(current_room[2:])
+        room_body, room_choices = parse_room_body_list(current_room[2:])
         if room_id in rooms:
             raise ValueError(f"Room id {room_id} is not unique")
         else:
             rooms[room_id] = {
                 "title": title,
                 "body": room_body,
+                "choices": room_choices,
             }
     return rooms
 
@@ -103,6 +102,6 @@ def fill_titles(room_dict: dict[str, dict]):
     Modifies the names of rooms in the choices.
     """
     for room in room_dict.values():
-        for i, choice in enumerate(room["body"]["choices"]):
+        for i, choice in enumerate(room["choices"]):
             if choice["text"] is None:
                 choice["text"] = room_dict[choice["id"]]["title"]
