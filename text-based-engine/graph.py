@@ -13,7 +13,7 @@ def generate_dot_content(room_dict):
     dot_content += '    // Node Definitions\n'
     for room in room_dict.values():
         node_id = room["id"]
-        node_name = room["name"]
+        node_title = room["title"]
 
         # Highlight End Nodes differently
         if not room["choices"]:
@@ -21,7 +21,7 @@ def generate_dot_content(room_dict):
         else:
             style = 'fillcolor="aliceblue"'
 
-        dot_content += f'    {node_id} [label="{node_name}", {style}];\n'
+        dot_content += f'    {node_id} [label="{node_title}", {style}];\n'
 
     # --- 2. Define Edges (Paths/Choices) ---
     dot_content += '\n    // Edge Definitions\n'
@@ -29,7 +29,7 @@ def generate_dot_content(room_dict):
         source_id = room["id"]
 
         for choice in room["choices"]:
-            target_id = choice["target"]
+            target_id = choice["id"]
             choice_text = choice["text"]
 
             # Use the IDs to create the connection with the choice text as the label
