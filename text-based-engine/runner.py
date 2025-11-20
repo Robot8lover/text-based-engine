@@ -1,8 +1,5 @@
 def choices_to_str(choice_list: list) -> str:
-    s = ""
-    for i, choice in enumerate(choice_list):
-        s += f"{i+1}. {choice["text"]}\n"
-    return s
+    return "\n".join(f"{i+1}. {choice["text"]}" for i, choice in enumerate(choice_list))
 
 def loop():
     pass
