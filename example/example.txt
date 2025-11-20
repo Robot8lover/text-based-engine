@@ -1,0 +1,29 @@
+start: first-room
+
+---
+The first room
+# first-room
+Some text goes here and now you can go to the following rooms. The one without a desired text will have the text of the room name. Room ids should be unique.
+
+We might want paragraph breaks and add more text here.
+
+1. [Go to second](#second-room)
+2. (#third-room)
+
+---
+The second room
+# second-room
+
+This is the second room. Good luck.
+
+5. [Go on if you dare](#third-room)
+
+---
+The third room
+# third-room
+
+You have found the third room!
+
+So exciting!
+
+
