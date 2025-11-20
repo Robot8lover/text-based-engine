@@ -9,7 +9,7 @@ def loop(rooms, start_id):
     while True:
         current_room = rooms[current_id]
         room_body = current_room["body"]
-        choices = room_body["choices"]
+        choices = current_room["choices"]
         print(current_room["title"])
         print()
         print(room_body["text"])
