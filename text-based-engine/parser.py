@@ -98,11 +98,11 @@ def parse_room_lists(room_lists: list[list[str]]) -> dict[str, dict]:
             }
     return rooms
 
-def fill_titles(room_list: dict[str, dict]):
+def fill_titles(room_dict: dict[str, dict]):
     """
     Modifies the names of rooms in the choices.
     """
-    for room in room_list.values():
+    for room in room_dict.values():
         for i, choice in enumerate(room["body"]["choices"]):
             if choice["text"] is None:
-                choice["text"] = room_list[choice["id"]]["title"]
+                choice["text"] = room_dict[choice["id"]]["title"]
